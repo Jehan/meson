@@ -292,6 +292,7 @@ class ConfigurationDataHolder(MutableInterpreterObject, ObjectHolder):
                              'has': self.has_method,
                              'get': self.get_method,
                              'get_unquoted': self.get_unquoted_method,
+                             'append': self.append_method,
                              'merge_from': self.merge_from_method,
                              })
         if isinstance(initial_values, dict):
@@ -387,6 +388,14 @@ class ConfigurationDataHolder(MutableInterpreterObject, ObjectHolder):
 
     def keys(self):
         return self.held_object.values.keys()
+
+    @FeatureNew('configuration_data.append()', '0.53.0')
+    @noKwargs
+    def append_method(self, args, kwargs):
+        if len(args) != 1:
+            raise InterpreterException("Configuration append requires 1 argument.")
+        data = args[0]
+        self.held_object.raw_data += [data]
 
     def merge_from_method(self, args, kwargs):
         if len(args) != 1:

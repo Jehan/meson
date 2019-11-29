@@ -2395,6 +2395,7 @@ class ConfigurationData:
     def __init__(self):
         super().__init__()
         self.values = {}
+        self.raw_data = []
 
     def __repr__(self):
         return repr(self.values)

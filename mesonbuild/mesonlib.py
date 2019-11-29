@@ -961,15 +961,18 @@ def dump_conf_header(ofilename, cdata, output_format):
                         mlog.warning('While generating header "%s", the macro "%s" has been set '
                                      'to a value starting with a newline. If you did it on purpose '
                                      'as a hack to inject code in a header file, this is deprecated. '
-                                     'Please use an intermediate configuration file (for instance `%s.in`) instead. '
+                                     'Please use the `append()` method allowing to append raw data '
+                                     'as-is at the end of the configuration file. '
                                      'Code injection usage is accepted for backward compatibility but '
                                      'this will be changed in the future.' %
-                                     (ofilename, k, os.path.basename(ofilename)))
+                                     (ofilename, k))
                     else:
                         v = '\\\n'.join(v.rstrip().split('\n'))
                 ofile.write('%sdefine %s %s\n\n' % (prefix, k, v))
             else:
                 raise MesonException('Unknown data type in configuration file entry: ' + k)
+        for v in cdata.raw_data:
+            ofile.write('%s\n' % (v))
     replace_if_different(ofilename, ofilename_tmp)
 
 def replace_if_different(dst, dst_tmp):
